@@ -1,0 +1,38 @@
+.register-title {
+    text-align: center;
+    margin-top: 2vh;
+    margin-right: 10vw;
+    color: skyblue;
+    font-family: 'Satisfy', cursive;
+    height: 5vh;
+    line-height: 8vh;
+    padding-left: 5vw;
+    font-weight: bolder;
+    font-size: larger;
+    /* color: white; */
+  }
+
+.register-btn-container{
+    margin-top: 3vh;
+    display: flex;
+    justify-content: center;
+}
+
+.register-btn{
+    width: 100%;
+    height: 8vh;
+    font-size: large;
+    background-color: rgb(25, 153, 238);
+    color: white;
+    border-radius: 10px;
+    border: 1px solid white;
+}
+
+.register-container {
+    width: 100%;
+    height: 83vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
