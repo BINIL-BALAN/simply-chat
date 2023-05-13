@@ -1,7 +1,7 @@
 import "./App.css";
-import Login from "./component/Login";
+import Login from "./page/Login";
 import Chat from "./component/Chat";
-import Register from "./component/Register";
+import Register from "./page/Register";
 import PageNoteFound from "./component/PageNoteFound";
 import { Route, BrowserRouter, Routes } from "react-router-dom";
 function App() {

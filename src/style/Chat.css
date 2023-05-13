@@ -1,0 +1,11 @@
+.desktop{
+    width: 20vw;
+    height: 40vw;
+    background-color: red;
+}
+
+.mobile{
+    width: 20vw;
+    height: 40vw;
+    background-color: black;
+}
