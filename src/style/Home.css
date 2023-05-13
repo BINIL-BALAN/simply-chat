@@ -1,0 +1,107 @@
+
+
+@media (max-width: 625px){
+    .home{
+       width: 100%;
+       height: 100vh;
+       display: flex;
+       flex-direction: column;
+    }
+    .header{
+      position: sticky;
+      top: 0px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2px 10px; 
+      background-color: #2176ff;
+    }
+    .app-title{
+      color: white;
+      font-family: 'Satisfy',cursive;
+    }
+    .mini-profile{
+      width: fit-content;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .dp{
+      width: 50px;
+      height: 50px;
+      margin-right: 3vw;
+      border-radius: 50%;
+      border: 2px solid skyblue;
+    }
+    .username{
+      color: white;
+      font-size: 1rem;
+      font-weight: bold;
+    }
+    .search-container{
+      margin: 5px 5px 0px 5px;
+      border-bottom: 1px solid #e0e2e8;
+    }
+    .search{
+      color: #5c6785;
+      font-size: large;
+      height: 7vh;
+      width: 85%;
+      border: 0px;
+      outline: none;
+    }
+    .search-btn{
+      background: none;
+      border: none;
+      font-size: 1.4rem;
+      padding: 0px;
+      color: #2176ff;
+    }
+    .search-btn:hover{
+      background: none;
+      border: 1px solid #c8cbd4;
+      padding: 5px;
+      margin-bottom: 4px;
+      font-size: 1.2rem;
+      border-radius: 5px;
+
+    }
+    .profiles{
+      margin-top: 1vh;
+      width: 100%;
+    }
+    
+   .chat{
+    display: none;
+   }
+   .small-menu{
+    position: fixed;
+    bottom: 10px;
+    width: 100%;
+     display: flex;
+     justify-content: center;
+   }
+   .fixed-btn{
+    border: none;
+    border-radius: 50%;
+    height: 65px;
+    width: 65px;
+    margin: 0px 2vw;
+    color: white;
+    font-size: 1.5rem;
+   }
+  
+   .fixed-btn-a{
+    text-decoration: none;
+    color: white;
+    font-size: 1.5rem;
+    text-align: center;
+    line-height: 65px;
+    border: none;
+    border-radius: 50%;
+    height: 65px;
+    width: 65px;
+    margin: 0px 2vw;
+   }
+}

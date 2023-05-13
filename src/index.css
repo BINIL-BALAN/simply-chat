@@ -1,4 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Righteous&family=Satisfy&display=swap');body {
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Righteous&family=Satisfy&display=swap');
+body {
+  scroll-behavior: smooth;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -11,3 +13,16 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.success{
+  background-color:#28a745;
+ }
+ .danger{
+  background-color:#dc3545;
+ }
+ .warning{
+  background-color: #ffc107;
+ }
+ .primary{
+  background-color: #2176ff;
+ }

@@ -1,8 +1,8 @@
 import "./App.css";
 import Login from "./page/Login";
-import Chat from "./component/Chat";
+import Home from "./page/Home";
 import Register from "./page/Register";
-import PageNoteFound from "./component/PageNoteFound";
+import PageNoteFound from "./page/PageNoteFound";
 import { Route, BrowserRouter, Routes } from "react-router-dom";
 function App() {
   return (
@@ -11,7 +11,7 @@ function App() {
         <Routes>
           <Route path='/' element={<Login />} />
           <Route path='/register' element={<Register />} />
-          <Route path='/chat' element={<Chat />} />
+          <Route path='/chat' element={<Home />} />
           <Route path='*' element={<PageNoteFound />} />
         </Routes>
       </BrowserRouter>
