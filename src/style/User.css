@@ -12,6 +12,11 @@
     justify-content: space-between;
     align-items: center;
   }
+
+  .user:hover{
+    color: white;
+    background-color: rgba(185, 199, 209, 0.2);
+  }
   .profile-img{
     margin: 0px;
     width: 68px;

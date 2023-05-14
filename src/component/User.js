@@ -1,9 +1,10 @@
 import React from "react";
 import '../style/User.css'
-function User() {
+function User({setToggle}) {
+ 
   return (
     <>
-      <div className="user">
+      <div className="user" onClick={e=>setToggle(false)}>
        <div style={{display:'flex',flexDirection:'row'}}>
             <img src="images/dp.png" alt="" className="profile-img" />
             <div className="details">

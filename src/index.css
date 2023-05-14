@@ -16,13 +16,45 @@ code {
 
 .success{
   background-color:#28a745;
+  color: white;
  }
  .danger{
   background-color:#dc3545;
+  color: white;
+
  }
  .warning{
   background-color: #ffc107;
+  color: white;
+
  }
  .primary{
   background-color: #2176ff;
+  color: white;
+
+ }
+
+
+ .success-outline{
+  border: 1px solid #28a745;
+  background-color:white;
+  color: #28a745;
+ }
+ .danger-outline{
+  border: 1px solid #dc3545;
+  background-color:white;
+  color: #dc3545;
+
+ }
+ .warning-outline{
+  border: 1px solid #ffc107;
+  background-color: white;
+  color: #ffc107;
+
+ }
+ .primary-outline{
+  border: 1px solid #2176ff;
+  background-color: white;
+  color: #2176ff;
+
  }

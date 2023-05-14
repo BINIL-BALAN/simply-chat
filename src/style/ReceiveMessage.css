@@ -1,0 +1,31 @@
+.send-msg-container {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+  }
+  .msg-wrapper {
+    width: 50%;
+    margin-right: 2vw;
+    margin-left: 2vw;
+    margin-top: 1vh;
+    margin-bottom: 1vh;
+  }
+  .receive-time {
+    color: #5c6785;
+    text-align: left;
+    font-style: italic;
+    margin: 2px 0px 0px 0px;
+    padding: 0px;
+    width: 48vw;
+  }
+  .receive-message-content {
+    color:  #5c6785;
+    font-weight: bold;
+    text-align: left;
+    max-width: 50vw;
+    font-size: large;
+    padding: 0.9rem;
+    border-radius: 27px;
+    background-color: #f0f1f3;;
+  }
+  
