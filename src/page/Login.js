@@ -1,14 +1,40 @@
-import React, { useRef } from "react";
+import React, { useRef,useState } from "react";
 import "../style/Login.css";
-
+import {useNavigate} from "react-router-dom"
+import { signInWithEmailAndPassword } from "firebase/auth";
+import {auth} from '../firebase'
 function Login() {
-  const password = useRef();
-  const email = useRef();
-
-  function handleSubmit(e) {
+  const userPassword = useRef();
+  const userEmail = useRef();
+ const navigate = useNavigate()
+ const [loading,setLoading] = useState(false)
+const [alertMsg,setAlert] =useState(false)
+ async  function handleSubmit(e) {
     e.preventDefault();
-    let userEmail = email.current.value;
-    let userassword = password.current.value;
+    let email = userEmail.current.value;
+    let password = userPassword.current.value;
+    
+    if(email !== "" && password !== ""){
+      setLoading(true)
+      try{
+        await signInWithEmailAndPassword(auth,email,password)
+         setTimeout(()=>{
+          setLoading(false)
+          navigate('/')
+         },1000)
+      }catch(error){
+            setTimeout(()=>{
+              setLoading(false)
+              setAlert(true)
+            },1000)
+            
+           console.log('error',error);
+      }
+    }
+  email === "" ? userEmail.current.style.borderColor = 'red' : userEmail.current.style.borderColor = 'white'
+  password === "" ? userPassword.current.style.borderColor = 'red' : userPassword.current.style.borderColor = 'white'
+ 
+   
   }
 
   return (
@@ -17,7 +43,7 @@ function Login() {
         <div className="login-title">
           Simply Chat <i className="fa-regular fa-comment"></i>
         </div>
-
+{alertMsg && (<div className="text-danger text-center"> Invalid email or password</div>)}
         <section className="login-container">
           <div className="login">
             <h2 className="login-h3">Login</h2>
@@ -25,7 +51,7 @@ function Login() {
               <div className="login-input-container">
                 <input
                   type="email"
-                  ref={email}
+                  ref={userEmail}
                   className="login-input"
                   placeholder="Email"
                 />
@@ -33,14 +59,14 @@ function Login() {
               <div className="login-input-container">
                 <input
                   type="password"
-                  ref={password}
+                  ref={userPassword}
                   className="login-input"
                   placeholder="Password"
                 />
               </div>
               <div className="login-btn-container">
                 <button type="submit" className="login-btn">
-                  Login
+                   {loading? (<div className="spinner-border"></div>) : "Login"}
                 </button>
                 <a className="forgot-password">Forgot ?</a>
               </div>

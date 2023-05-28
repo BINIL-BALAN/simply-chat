@@ -7,12 +7,15 @@ import { doc, setDoc } from "firebase/firestore";
 import { useNavigate, Link } from "react-router-dom";
 
 function Register() {
+  const [status,setStatus] = useState(false)
   const [err, setErr] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [avatar, setAvatar] = useState("images/avatar.png");
   const selectedImg = useRef();
-  useEffect(() => {}, []);
+  useEffect(() => {
+   
+  }, []);
 
   function handleSelect(e) {
     e.preventDefault();
@@ -21,17 +24,18 @@ function Register() {
 
   function insertImage(e) {
     const imgSelected = e.target.files[0];
+    console.log(imgSelected);
     const imgurl = URL.createObjectURL(imgSelected);
     setAvatar(imgurl);
   }
 
   async function handleSubmit(e) {
+    setLoading(true)
     e.preventDefault();
     const displayName = e.target[0].value;
     const email = e.target[1].value;
     const password = e.target[2].value;
     const file = e.target[3].files[0];
-    console.log(displayName, email, password, file);
 
     //firebase authentication
     try {
@@ -45,6 +49,7 @@ function Register() {
       await uploadBytesResumable(storageRef, file).then(() => {
         getDownloadURL(storageRef).then(async (downloadURL) => {
           try {
+            console.log('downloadURL',downloadURL);
             //Update profile
             await updateProfile(res.user, {
               displayName,
@@ -60,8 +65,13 @@ function Register() {
 
             //create empty user chats on firestore
             await setDoc(doc(db, "userChats", res.user.uid), {});
-             navigate("/chat");
+            setStatus(true)
+            setErr(false)
+            setTimeout(()=>{
+              navigate("/");
+            },2000)
           } catch (err) {
+            setStatus(true)
             console.log(err);
             setErr(true);
             setLoading(false);
@@ -69,6 +79,7 @@ function Register() {
         });
       });
     } catch (err) {
+      setStatus(true)
       setErr(true);
       setLoading(false);
     }
@@ -79,7 +90,7 @@ function Register() {
         <div className="register-title">
           Simply Chat <i className="fa-regular fa-comment"></i>
         </div>
-
+        {status ?( <div className={err ? "text-danger m-2 text-center" : "text-success m-2 text-center"}>{err ? "Registration failed" : "Registration successfull"}</div>) : ""}
         <section className="register-container">
           <div className="register">
             <h2 className="register-h3">Sign up</h2>
@@ -129,7 +140,7 @@ function Register() {
               </div>
               <div className="register-btn-container">
                 <button type="submit" className="register-btn">
-                  Register
+                  {loading? (<div className="spinner-border"></div>) : "Register"}
                 </button>
               </div>
             </form>

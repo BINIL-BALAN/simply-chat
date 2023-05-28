@@ -1,24 +1,122 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useContext,useEffect } from "react";
 import "../style/Home.css";
 import User from "../component/User";
-import SendMessage from "../component/SendMessage";
-import ReceiveMessage from "../component/ReceiveMessage";
+import Chat from "../component/Chat";
+import SearchResult from "../component/SearchResult";
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase";
+import { AuthContext } from "../context/AuthContext";
+import { ChatContext } from "../context/ChatContext";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  setDoc,
+  doc,
+  onSnapshot,
+  updateDoc,
+  serverTimestamp,
+  getDoc,
+} from "firebase/firestore";
+import { db } from "../firebase";
 
 function Home() {
-  const photos = useRef();
-  const msg = useRef()
-  const [toggle, setToggle] = useState(false);
-  const [message,setMessage] = useState()
+  
+  const [user, setUser] = useState(null);
+  const [seachUser, setSeachUser] = useState(null);
+  const [username, setUsername] = useState("");
+  const [toggle, setToggle] = useState(true);
+  const [err, setErr] = useState(false);
+  const [dpError, setDpError] = useState(true);
+  const [chats, setChats] = useState([]);
+  const { dispatch } = useContext(ChatContext);
 
-  function handleSelect() {
-    photos.current.click();
+  function handleDpError() {
+    setDpError(false);
   }
-  function insertPhoto() {}
 
-  function handleSend(e){
-    e.preventDefault()
-    setMessage(msg.current.value)
+  const { currentUser } = useContext(AuthContext);
+
+  async function handleSearch(e) {
+    console.log("search clicked");
+    const q = query(
+      collection(db, "users"),
+      where("displayName", "==", username)
+    );
+
+    try {
+      console.log("searching user");
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        console.log("inside loop", doc.data());
+        setSeachUser(doc.data());
+      });
+      console.log("search completed", querySnapshot);
+    } catch (err) {
+      console.log("error", err);
+      setErr(true);
+    }
   }
+
+
+  async function handleSelectSearchUser(){
+    setSeachUser(null)
+    console.log("user selected");
+    setToggle(false)
+
+    const combinedId =
+      currentUser?.uid > user?.uid
+        ? currentUser.uid + user?.uid
+        : user?.uid + currentUser?.uid;
+        console.log(combinedId);
+    try {
+      const res = await getDoc(doc(db, "chats", combinedId));
+
+      if (!res.exists()) {
+        //create a chat in chats collection
+        await setDoc(doc(db, "chats", combinedId), { messages: [] });
+
+        //create user chats
+        await updateDoc(doc(db, "userChats", currentUser.uid), {
+          [combinedId + ".userInfo"]: {
+            uid: user.uid,
+            displayName: user.displayName,
+            photoURL: user.photoURL,
+          },
+          [combinedId + ".date"]: serverTimestamp(),
+        });
+
+        await updateDoc(doc(db, "userChats", user.uid), {
+          [combinedId + ".userInfo"]: {
+            uid: currentUser.uid,
+            displayName: currentUser.displayName,
+            photoURL: currentUser.photoURL,
+          },
+          [combinedId + ".date"]: serverTimestamp(),
+        });
+      }
+    } catch (err) {}
+
+  }
+function handleSelectUser(selectedUser){
+  console.log("user selected");
+  setToggle(false)
+  dispatch({ type: "CHANGE_USER", payload: selectedUser });
+}
+  useEffect(()=>{
+    const getChats = () => {
+      const unsub = onSnapshot(doc(db, "userChats", currentUser.uid), (doc) => {
+        setChats(doc.data());
+      });
+
+      return () => {
+        unsub();
+      };
+    };
+
+    currentUser.uid && getChats();
+  },[currentUser.uid])
   return (
     <>
       <div id="top"></div>
@@ -31,36 +129,44 @@ function Home() {
                 Simply chat &nbsp;<i className="fa-regular fa-comment"></i>
               </h3>
               <div className="mini-profile">
-                <img className="dp" src="images/dp.png" alt="" />
-                <span className="username">username </span>
+                {dpError ? (
+                  <img
+                    className="dp"
+                    src={currentUser?.photoURL}
+                    alt=""
+                    onError={handleDpError}
+                  />
+                ) : (
+                  <img className="dp" src={"images/dp.png"} alt="" />
+                )}
+                <span className="username">{currentUser?.displayName} </span>
                 {/* <button className="logout-btn"><i class="fa-solid fa-arrow-right-from-bracket"></i></button> */}
               </div>
             </div>
 
             <div className="feed">
               <div className="search-container">
-                <input type="text" className="search" placeholder="Search..." />
-                <button className="search-btn">
+                <input
+                  type="text"
+                  className="search"
+                  placeholder="Search..."
+                  onChange={(e) => setUsername(e.target.value)}
+                  value={username}
+                />
+                <button className="search-btn" onClick={(e) => handleSearch(e)}>
                   <i className="fa-solid fa-magnifying-glass"></i>
                 </button>
+                {err && (<div className="text-secondary">User not found</div>)}
+                {
+                  seachUser && (<div onClick={handleSelectSearchUser}><SearchResult user={seachUser}/></div>)
+                }
               </div>
               <div className="profiles">
-                <User setToggle={setToggle} />
-                <User />
-                <User />
-                <User />
-                <User />
-                <User />
-                <User />
-                <User />
-                <User />
-                <User />
-                <User />
-                <User />
-                <User />
-                <User />
-                <User />
-                <User />
+                {
+                 Object.entries(chats)?.map(user=>(
+                    <div key={user[0]} onClick={()=>handleSelectUser(user[1].userInfo)}><User setToggle={setToggle} user={user[1]}/></div>
+                 ))
+                }
               </div>
               <div className="small-menu">
                 <a className="fixed-btn-a success">
@@ -71,65 +177,14 @@ function Home() {
                   {" "}
                   <i className="fa-solid fa-arrow-up"></i>{" "}
                 </a>
-                <a className="fixed-btn-a danger">
+                <a className="fixed-btn-a danger" onClick={() => signOut(auth)}>
                   <i className="fa-solid fa-right-from-bracket"></i>
                 </a>
               </div>
             </div>
           </section>
         ) : (
-          <section className="chat">
-            <div className="header-msg">
-              <div className="mini-profile-msg">
-                <button className="exit-btn" onClick={(e) => setToggle(true)}>
-                  <i class="fa-solid fa-chevron-left"></i>
-                </button>
-                <img className="dp" src="images/dp.png" alt="" />
-                <span className="username">username </span>
-              </div>
-            </div>
-
-            <div className="chat-session">
-              <SendMessage message={message}/>
-              <ReceiveMessage/>
-              <SendMessage/>
-              <ReceiveMessage/>
-              <SendMessage/>
-              <ReceiveMessage/>
-              <SendMessage/>
-              <ReceiveMessage/>
-            </div>
-
-            <div className="messaging-session">
-              <form onSubmit={handleSend} className="message-form">
-                <input
-                  ref={msg}
-                  type="text"
-                  name=""
-                  id=""
-                  className="msg-input"
-                  placeholder="Message"
-                />
-                <input
-                  type="file"
-                  className="img-file"
-                  onChange={insertPhoto}
-                  accept="image/*"
-                  ref={photos}
-                />
-                <button
-                type="button"
-                  className="success-outline  send-btn"
-                  onClick={handleSelect}
-                >
-                  <i class="fa-solid fa-image"></i>
-                </button>
-                <button className="primary send-btn" type="submit">
-                  <i class="fa-solid fa-paper-plane"></i>
-                </button>
-              </form>
-            </div>
-          </section>
+            <Chat setToggle={setToggle} signout={signOut} auth={auth}/>
         )}
       </div>
     </>
@@ -137,3 +192,5 @@ function Home() {
 }
 
 export default Home;
+
+// https://firebasestorage.googleapis.com/v0/b/simply-chat-398c4.appspot.com/o/name%2011684558433867?alt=media&token=66651920-f812-4814-936a-281e4acefeb5

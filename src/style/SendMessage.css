@@ -25,6 +25,16 @@
   max-width: 50vw;
   font-size: large;
   padding: 0.9rem;
-  border-radius: 27px;
+  /* border-radius: 27px; */
+  border-top-left-radius: 27px;
+  border-top-right-radius: 27px;
+  border-bottom-left-radius: 27px;
+  border-bottom-right-radius: 0px;
   background-color: #2176ff;
+}
+
+.msg-image{
+  width: 43vw;
+  height: 38vh;
+  border-radius: 10px;
 }

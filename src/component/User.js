@@ -1,18 +1,28 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
 import '../style/User.css'
-function User({setToggle}) {
+function User({setToggle,user}) {
+  const [dpError, setDpError] = useState(true);
  
   return (
     <>
-      <div className="user" onClick={e=>setToggle(false)}>
+      <div className="user">
        <div style={{display:'flex',flexDirection:'row'}}>
-            <img src="images/dp.png" alt="" className="profile-img" />
+            {dpError ? (
+                  <img
+                    className="dp"
+                    src={user.userInfo?.photoURL}
+                    alt=""
+                    onError={e=>setDpError(false)}
+                  />
+                ) : (
+                  <img className="dp" src={"images/dp.png"} alt="" />
+                )}
             <div className="details">
-                <div style={{width:'100%'}}><h4 className="name">username</h4></div>
-               <div> <span className="latest-msg">hellovdfgdfhfhf</span></div>
+                <div style={{width:'100%'}}><h4 className="name">{user.userInfo?.displayName}</h4></div>
+               <div> <span className="latest-msg">{user.lastMessage?.text}</span></div>
             </div>
        </div>
-       <span className="badge">2</span>
+       <span className="badge"></span>
       </div>
     </>
   );
