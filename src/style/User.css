@@ -1,5 +1,6 @@
 @media (max-width:625px){
     .user{
+    cursor: pointer;
     padding: 5px 5px;
     width: 96%;
     height: fit-content;
@@ -41,12 +42,13 @@
     font-size: small;
  }
  .badge{
-    color: white;
+   color: white;
    background-color: #2176ff;
-   height: 35px;
-   width: 35px;
-   text-align: center;
-   line-height: 35px;
+   height: 26px;
+   width: 26px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
    border-radius: 50%;
  }
 }
