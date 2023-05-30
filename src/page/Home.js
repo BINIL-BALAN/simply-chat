@@ -100,7 +100,6 @@ function Home() {
 
   }
 function handleSelectUser(selectedUser){
-  console.log("user selected");
   setToggle(false)
   dispatch({ type: "CHANGE_USER", payload: selectedUser });
 }

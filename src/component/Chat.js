@@ -31,10 +31,6 @@ function Chat({ setToggle, signout, auth }) {
   const { currentUser } = useContext(AuthContext);
   const chatArea = useRef();
 
-  function handleSelect() {
-    photos.current.click();
-  }
-
   async function handleSend(e) {
     e.preventDefault();
     const chatMsg = msg.current.value;
@@ -212,6 +208,7 @@ function updateMessage(message){
               accept="image/*"
               ref={photos}
             />
+            
             <button
               type="button"
               className="btn text-secondary send-btn"
