@@ -15,7 +15,7 @@ import {
   Timestamp,
   updateDoc,
 } from "firebase/firestore";
-function Chat({ setToggle,signout,auth }) {
+function Chat({ setToggle, signout, auth }) {
   // const [text, setText] = useState();
   const [img, setImg] = useState();
   const [dpError, setDpError] = useState(true);
@@ -23,9 +23,10 @@ function Chat({ setToggle,signout,auth }) {
     window.localStorage.getItem("theme") || "white"
   );
   const msg = useRef();
+  const modalRef = useRef()
   const themeSelector = useRef();
   const photos = useRef();
-  const [messages, setMessages] = useState();
+  const [messages, setMessages] = useState([]);
   const { data } = useContext(ChatContext);
   const { currentUser } = useContext(AuthContext);
   const chatArea = useRef();
@@ -35,7 +36,6 @@ function Chat({ setToggle,signout,auth }) {
   }
 
   async function handleSend(e) {
-    scrollChatSection();
     e.preventDefault();
     const chatMsg = msg.current.value;
     msg.current.value = "";
@@ -43,30 +43,28 @@ function Chat({ setToggle,signout,auth }) {
 
     if (img) {
       const storageRef = ref(storage, uuid());
-      const image = img
-      const uploadTask = uploadBytesResumable(storageRef, image);
-
+      const uploadTask = uploadBytesResumable(storageRef, img);
       uploadTask.on(
         (error) => {
-         console.log(error);
+          //TODO:Handle Error
         },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-            try{
-              console.log(currentUser?.uid)
-              await updateDoc(doc(db, "chats", data?.chatId), {
-                messages: arrayUnion({
-                  id: uuid(),
-                  text: chatMsg,
-                  senderId: currentUser?.uid,
-                  date: Timestamp.now(),
-                  img: downloadURL,
-                }),
-              });
-            }catch(err){
-              console.log('error',err)
-            }
-          });
+        async () => {
+          try {
+            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+            // Object exists, proceed with further operations
+            await updateDoc(doc(db, "chats", data.chatId), {
+              messages: arrayUnion({
+                id: uuid(),
+                text: chatMsg,
+                senderId: currentUser.uid,
+                date: Timestamp.now(),
+                img: downloadURL,
+              }),
+            });
+          } catch (error) {
+            // Handle object-not-found error
+            console.log("Object does not exist:", error);
+          }
         }
       );
     } else {
@@ -105,15 +103,6 @@ function Chat({ setToggle,signout,auth }) {
     }
   }
 
-  function scrollChatSection() {
-    const container = chatArea?.current;
-    const lastElement = container?.lastElementChild;
-    const scrollPosition = lastElement?.offsetTop - container?.offsetTop;
-    container.scrollTo({
-      top: scrollPosition,
-      behavior: "smooth",
-    });
-  }
   function handleDpError() {
     setDpError(false);
   }
@@ -122,21 +111,21 @@ function Chat({ setToggle,signout,auth }) {
     window.localStorage.setItem("theme", e.target.value);
     setThemeColor(e.target.value);
   }
-
-  useEffect(() => {
-    scrollChatSection();
-    console.log("useEffect called", chatArea.current);
-    // const container =  chatArea.current
-    // container.scrollBottom = container.scrollHeight;
+function updateMessage(message){
+  if(messages.length < message.length){
+    modalRef.current.click()
+    setMessages(message)
+  }
+}
+  useEffect(() => { 
     const unSub = onSnapshot(doc(db, "chats", data?.chatId), (doc) => {
-      doc.exists() && setMessages(doc.data()?.messages);
-      doc.exists() && scrollChatSection();
+      doc.exists() && updateMessage(doc.data()?.messages)
     });
-
+         chatArea.current.scrollTop = chatArea.current.scrollHeight; 
     return () => {
       unSub();
     };
-  }, [data.chatId]);
+  }, [data.chatId,messages]);
 
   return (
     <>
@@ -171,16 +160,19 @@ function Chat({ setToggle,signout,auth }) {
               type="button"
               data-bs-toggle="dropdown"
               aria-expanded="false"
-            > <i className="fa-solid fa-ellipsis-vertical"></i> </button>
+            >
+              {" "}
+              <i className="fa-solid fa-ellipsis-vertical"></i>{" "}
+            </button>
             <ul className="dropdown-menu">
               <li onClick={() => themeSelector.current.click()}>
                 <a className="dropdown-item" href="#">
                   Change theme
                 </a>
               </li>
-               <li onClick={() => signout(auth)}>
+              <li onClick={() => signout(auth)}>
                 <a className="dropdown-item" href="#">
-                 Logout
+                  Logout
                 </a>
               </li>
             </ul>
@@ -200,6 +192,7 @@ function Chat({ setToggle,signout,auth }) {
             )
           )}
         </div>
+
         {/* <div id="adj" className="adjuster"></div> */}
 
         <div className="messaging-session">
@@ -222,10 +215,10 @@ function Chat({ setToggle,signout,auth }) {
             <button
               type="button"
               className="btn text-secondary send-btn"
-              data-bs-toggle="modal" 
+              data-bs-toggle="modal"
               data-bs-target="#select-image"
             >
-              <i class="fa-solid fa-paperclip"></i>
+              <i className="fa-solid fa-paperclip"></i>
             </button>
             <button className="primary send-btn" type="submit">
               <i className="fa-solid fa-paper-plane"></i>
@@ -234,32 +227,73 @@ function Chat({ setToggle,signout,auth }) {
         </div>
       </section>
 
-<div className="modal fade" id="select-image" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div className="modal-dialog modal-dialog-centered">
-    <div className="modal-content">
-      <div className="modal-header border-0">
-        <h1 className="modal-title fs-5" id="staticBackdropLabel">Send image</h1>
-        <button type="button" onClick={()=>setImg('')} className="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
+      <div
+        
+        className="modal fade show"
+        id="select-image"
+        data-bs-backdrop="static"
+        data-bs-keyboard="false"
+        tabIndex="-1"
+        aria-labelledby="staticBackdropLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content">
+            <div className="modal-header border-0">
+              <h1 className="modal-title fs-5" id="staticBackdropLabel">
+                Send image
+              </h1>
+              <button
+                ref={modalRef}
+                type="button"
+                onClick={() => setImg("")}
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              >
+                {" "}
+              </button>
+            </div>
+            <div className="modal-body d-flex justify-content-center align-items-center">
+              {img ? (
+                <img
+                  className="h-100 w-75 border-rounded"
+                  src={URL.createObjectURL(img)}
+                  alt=""
+                />
+              ) : (
+                <img
+                  className="h-100 w-75 border-rounded"
+                  src="images/img.png"
+                  alt=""
+                />
+              )}
+            </div>
+            <div className="modal-footer border-0">
+              <button
+                type="button"
+                onClick={() => photos.current.click()}
+                className="btn text-success success-outline  send-btn"
+              >
+                <i className="fa-regular fa-image"></i>
+              </button>
+              <button
+                onClick={handleSend}
+                className="primary send-btn"
+                type="button"
+              >
+                <i className="fa-solid fa-paper-plane"></i>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
-      <div className="modal-body d-flex justify-content-center align-items-center">
-       {img ? <img className="h-100 w-75 border-rounded" src={URL.createObjectURL(img)} alt=""/> : 
-       <img className="h-100 w-75 border-rounded" src="images/img.png" alt="" />}
-      </div>
-      <div className="modal-footer border-0">
-        <button  type="button" onClick={()=> photos.current.click()} className="btn text-success success-outline  send-btn">
-          <i class="fa-regular fa-image"></i>
-          </button>
-        <button onClick={handleSend} className="primary send-btn" type="button">
-              <i className="fa-solid fa-paper-plane"></i>
-            </button>
-      </div>
-    </div>
-  </div>
-</div>
     </>
   );
 }
 
-export default Chat;
+export default React.memo(Chat);
 
-// https://github.com/safak/youtube2022/tree/react-chat
+// https://github.com/safak/youtube2022/tree/react-chat  const container = chatArea.current;
+        // container.scrollTop = container.scrollHeight - container.clientHeight; 
+        //doc.exists() && setMessages(doc.data()?.messages);

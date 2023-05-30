@@ -1,6 +1,6 @@
 .send-msg-container {
   width: 100%;
-  display: flex;
+  display: flex;  
   justify-content: flex-end;
 }
 .msg-wrapper { 
@@ -11,6 +11,7 @@
   margin-bottom: 1vh;
 }
 .time {
+  font-size: small;
   color: #5c6785;
   text-align: right;
   font-style: italic;

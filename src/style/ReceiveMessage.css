@@ -1,7 +1,6 @@
-.send-msg-container {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
+.receive-msg-container {
+  margin-top: 1.7vh;
+
   }
   .msg-wrapper {
     width: 50%;
@@ -11,10 +10,11 @@
     margin-bottom: 1vh;
   }
   .receive-time {
+    font-size: small;
     color: #5c6785;
     text-align: left;
     font-style: italic;
-    margin: 2px 0px 0px 0px;
+    margin: 2px 0px 0px 1.2vw;
     padding: 0px;
     width: 48vw;
   }
