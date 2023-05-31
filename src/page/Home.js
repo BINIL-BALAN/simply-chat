@@ -11,6 +11,7 @@ import {
   collection,
   query,
   where,
+  or,
   getDocs,
   setDoc,
   doc,
@@ -31,7 +32,7 @@ function Home() {
   const [dpError, setDpError] = useState(true);
   const [chats, setChats] = useState([]);
   const { dispatch } = useContext(ChatContext);
-
+  const [loading,setLoading] = useState(false)
   function handleDpError() {
     setDpError(false);
   }
@@ -40,9 +41,11 @@ function Home() {
 
   async function handleSearch(e) {
     console.log("search clicked");
+    setLoading(true)
     const q = query(
       collection(db, "users"),
-      where("displayName", "==", username)
+     or(where("displayName", "==", username),
+      where("phone", "==", username))
     );
 
     try {
@@ -51,11 +54,21 @@ function Home() {
       querySnapshot.forEach((doc) => {
         console.log("inside loop", doc.data());
         setSeachUser(doc.data());
+        setLoading(false)
+      });
+      await new Promise((resolve, reject) => {
+        setTimeout(() => {
+          reject(new Error(true));
+        }, 60000);
       });
       console.log("search completed", querySnapshot);
     } catch (err) {
       console.log("error", err);
-      setErr(true);
+      setErr(err);
+      setLoading(false)
+      setTimeout(() => {
+        setErr(false);
+      }, 3000);
     }
   }
 
@@ -72,7 +85,7 @@ function Home() {
         console.log(combinedId);
     try {
       const res = await getDoc(doc(db, "chats", combinedId));
-
+       console.log(!res.exists())
       if (!res.exists()) {
         //create a chat in chats collection
         await setDoc(doc(db, "chats", combinedId), { messages: [] });
@@ -148,12 +161,12 @@ function handleSelectUser(selectedUser){
                 <input
                   type="text"
                   className="search"
-                  placeholder="Search..."
+                  placeholder="Search by name or phone number"
                   onChange={(e) => setUsername(e.target.value)}
                   value={username}
                 />
                 <button className="search-btn" onClick={(e) => handleSearch(e)}>
-                  <i className="fa-solid fa-magnifying-glass"></i>
+                  {loading ? <div className="spinner spinner-border"></div>: <i className="fa-solid fa-magnifying-glass"></i>}
                 </button>
                 {err && (<div className="text-secondary">User not found</div>)}
                 {

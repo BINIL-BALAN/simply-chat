@@ -34,10 +34,11 @@ function Register() {
     e.preventDefault();
     const displayName = e.target[0].value;
     const email = e.target[1].value;
-    const password = e.target[2].value;
-    const file = e.target[3].files[0];
-
-    //firebase authentication
+    const phone = e.target[2].value
+    const password = e.target[3].value;
+    const file = e.target[4].files[0];
+ 
+    // firebase authentication
     try {
       //Create user
       const res = await createUserWithEmailAndPassword(auth, email, password);
@@ -60,6 +61,7 @@ function Register() {
               uid: res.user.uid,
               displayName,
               email,
+              phone,
               photoURL: downloadURL,
             });
 
@@ -100,6 +102,7 @@ function Register() {
                   type="text"
                   className="login-input"
                   placeholder="Username"
+                  required
                 />
               </div>
               <div className="login-input-container">
@@ -107,6 +110,15 @@ function Register() {
                   type="email"
                   className="login-input"
                   placeholder="Email"
+                  required
+                />
+              </div>
+              <div className="login-input-container">
+                <input
+                  type="tel"
+                  className="login-input"
+                  placeholder="Phone number"
+                  required
                 />
               </div>
               <div className="login-input-container">
@@ -114,6 +126,7 @@ function Register() {
                   type="password"
                   className="login-input"
                   placeholder="Password"
+                  required
                 />
               </div>
               <div className="register-btn-container2">
