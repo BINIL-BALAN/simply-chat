@@ -42,14 +42,20 @@
   background-color: white;
   height: 100dvh;
 }
-.login-input-container{
-  width: 80%;
-}
+
 .login-h3{
   color: white;
   text-align: center;
 }
 .login-input-container{
+  width: 60%;
+  height: 9dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+.login-password-container{
   width: 60%;
   height: 9dvh;
   display: flex;
@@ -179,9 +185,7 @@ cursor: pointer;
     background-color: white;
     height: 100dvh;
   }
-  .login-input-container{
-    width: 80%;
-  }
+
   .login-h3{
     color: white;
     text-align: center;
@@ -195,8 +199,35 @@ cursor: pointer;
     margin-top: 2dvh;
     color: white;
   }
+  .login-password-container{
+    width: 74%;
+    height: fit-content;
+    border:1px solid white;
+    border-top: none;
+    border-left:none ;
+    border-right: none;
+    border-bottom: 1px solid white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2dvh;
+    color: white;
+  }
+  .input-password{
+    border: none;
+    font-size: .9rem;
+    height: 5dvh;
+    width: 60dvw;
+    color: white;
+    background: transparent;
+    outline: none;
+  }
+  .input-password::placeholder{
+    font-size: larger;
+    color:white;
+  }
   .login-input{
-   font-size: .9rem;
+    font-size: .9rem;
     height: 5dvh;
     width: 60dvw;
     border-top: none;

@@ -7,12 +7,17 @@ import { doc, setDoc } from "firebase/firestore";
 import { useNavigate, Link } from "react-router-dom";
 
 function Register() {
+  const [file,setFile] = useState(null)
   const [status,setStatus] = useState(false)
+  const [showPassword,setShowPassword] = useState(true)
   const [err, setErr] = useState(false);
+  const [numberCheck,setNumberCheck] = useState(false)
+  const [passwordCheck,setPasswordCheck] = useState(false)
+  const [passwordCheckMsg,setPasswordCheckMsg] = useState("")
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [avatar, setAvatar] = useState("images/avatar.png");
-  const selectedImg = useRef();
+  // const selectedImg = useRef();
   useEffect(() => {
    
   }, []);
@@ -24,20 +29,44 @@ function Register() {
 
   function insertImage(e) {
     const imgSelected = e.target.files[0];
-    console.log(imgSelected);
+    setFile(imgSelected)
+    // console.log(imgSelected);
     const imgurl = URL.createObjectURL(imgSelected);
     setAvatar(imgurl);
   }
+function handleCheckNumber(e){
+  if(e.target.value.length !== 10){
+     setNumberCheck(true)
+  }else{
+     setNumberCheck(false)
+  }
+}
 
+function handleCheckPassword(e){
+  const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{7,}$/;
+  if(regex.test(e.target.value)){
+    setPasswordCheck(true)
+    setPasswordCheckMsg("Strong password")
+  }else{
+    setPasswordCheck(false)
+    setPasswordCheckMsg("Password must have 7 characters,One or more special character,Uppercase letters,Lowercase letters,one or more digits")
+  }
+}
   async function handleSubmit(e) {
     setLoading(true)
     e.preventDefault();
     const displayName = e.target[0].value;
     const email = e.target[1].value;
-    const password = e.target[2].value;
-    const file = e.target[3].files[0];
+    const phone = e.target[2].value;
+    const password = e.target[3].value;
+    // const file = e.target[4].files[0];
+console.log(displayName)
+console.log(email)
+console.log(phone)
+console.log(password)
+console.log(file)
 
-    //firebase authentication
+    // firebase authentication
     try {
       //Create user
       const res = await createUserWithEmailAndPassword(auth, email, password);
@@ -60,6 +89,7 @@ function Register() {
               uid: res.user.uid,
               displayName,
               email,
+              phone,
               photoURL: downloadURL,
             });
 
@@ -100,6 +130,7 @@ function Register() {
                   type="text"
                   className="login-input"
                   placeholder="Username"
+                  required
                 />
               </div>
               <div className="login-input-container">
@@ -107,15 +138,30 @@ function Register() {
                   type="email"
                   className="login-input"
                   placeholder="Email"
+                  required
                 />
               </div>
               <div className="login-input-container">
                 <input
-                  type="password"
+                  type="tel"
                   className="login-input"
-                  placeholder="Password"
+                  onChange={handleCheckNumber}
+                  placeholder="Phone number"
+                  required
                 />
               </div>
+              {numberCheck && <div className="text-danger">Phone number less than 10 digits</div>}
+              <div className="login-password-container">
+                <input
+                  type={showPassword ? "password" : "text"}
+                  className="input-password"
+                  onChange={handleCheckPassword}
+                  placeholder="Password"
+                  required
+                />
+                <button type="button" className="show-btn" onClick={()=>setShowPassword(!showPassword)}>{showPassword ? <i className="fa-regular fa-eye-slash"></i> : <i className="fa-regular fa-eye"></i>}</button>
+              </div>
+              {passwordCheck ? <p className="text-info">{passwordCheckMsg}</p> : <p className="text-warning px-4 text-justify">{passwordCheckMsg}</p>}
               <div className="register-btn-container2">
                 <img
                   className="register-avatar"
