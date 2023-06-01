@@ -6,48 +6,49 @@
   display: flex;
   align-items: center;
   flex-direction: column;
-  background:linear-gradient(to right, #267871, #136a8a);
-  box-shadow:0px 2px 10px rgba(0,0,0,0.2), 0px 10px 20px rgba(0,0,0,0.3), 0px 30px 60px 1px rgba(0,0,0,0.5);
+  background: linear-gradient(to right, #267871, #136a8a);
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2), 0px 10px 20px rgba(0, 0, 0, 0.3),
+    0px 30px 60px 1px rgba(0, 0, 0, 0.5);
 }
 .login-title {
-    text-align: center;
-    margin-top: 2vh;
-    margin-right: 10vw;
-    color: skyblue;
-    font-family: 'Satisfy', cursive;
-    height: 8vh;
-    line-height: 8vh;
-    padding-left: 5vw;
-    font-weight: bolder;
-    font-size: larger;
-    /* color: white; */
-  }
+  text-align: center;
+  margin-top: 2vh;
+  margin-right: 10vw;
+  color: skyblue;
+  font-family: "Satisfy", cursive;
+  height: 8vh;
+  line-height: 8vh;
+  padding-left: 5vw;
+  font-weight: bolder;
+  font-size: larger;
+  /* color: white; */
+}
 .login-container {
   width: 100%;
-  height:60vh;
+  height: 60vh;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.input-form{
+.input-form {
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 }
-.bg-color{
+.bg-color {
   /* background-color: #ABCDEF; */
   background-color: white;
   height: 100dvh;
 }
 
-.login-h3{
+.login-h3 {
   color: white;
   text-align: center;
 }
-.login-input-container{
+.login-input-container {
   width: 60%;
   height: 9dvh;
   display: flex;
@@ -55,7 +56,7 @@
   justify-content: center;
   color: white;
 }
-.login-password-container{
+.login-password-container {
   width: 60%;
   height: 9dvh;
   display: flex;
@@ -63,44 +64,43 @@
   justify-content: center;
   color: white;
 }
-.login-input{
- font-size: .9rem;
+.login-input {
+  font-size: 0.9rem;
   height: 5dvh;
   width: 60dvw;
   border-top: none;
-  border-left:none ;
+  border-left: none;
   border-right: none;
   color: white;
   border-bottom: 1px solid white;
   background: transparent;
   outline: none;
 }
-.login-input::placeholder{
+.login-input::placeholder {
   font-size: larger;
- color:white;
+  color: white;
 }
-.login-btn{
-background: none;
-width: 50%;
-height:7dvh;
-border:2px solid white ;
-color: white;
-font-weight: bold;
-font-size: large;
-border-radius: 10px;
-cursor: pointer;
+.login-btn {
+  background: none;
+  width: 50%;
+  height: 7dvh;
+  border: 2px solid white;
+  color: white;
+  font-weight: bold;
+  font-size: large;
+  border-radius: 10px;
+  cursor: pointer;
 }
 
-.login-btn:hover{
+.login-btn:hover {
   background: white;
   color: #267871;
 }
-.forgot-password{
- 
- text-decoration: none;
- color: white;
+.forgot-password {
+  text-decoration: none;
+  color: white;
 }
-.or{
+.or {
   color: white;
   width: 28px;
   height: 28px;
@@ -112,18 +112,18 @@ cursor: pointer;
   align-items: center;
 }
 
-.or::before{
-  content: " " ;
+.or::before {
+  content: " ";
   display: block;
   position: absolute;
   margin-right: 37vw;
   height: 1px;
   width: 27vw;
- background: white;
+  background: white;
 }
 
-.or::after{
-  content: " " ;
+.or::after {
+  content: " ";
   display: block;
   position: absolute;
   margin-left: 37vw;
@@ -132,21 +132,20 @@ cursor: pointer;
   background: white;
 }
 
-.login-btn-container{
-  margin-top:5vh ;
+.login-btn-container {
+  margin-top: 5vh;
   width: 50%;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.click-here{
+.click-here {
   font-weight: bold;
-  color: #ABCDEF;
+  color: #abcdef;
   text-decoration: none;
-  margin-left: .4rem;
+  margin-left: 0.4rem;
 }
 @media (max-width: 625px) {
-
   .login {
     border-radius: 10px;
     box-sizing: content-box;
@@ -155,16 +154,17 @@ cursor: pointer;
     display: flex;
     align-items: center;
     flex-direction: column;
-    background:linear-gradient(to right, #267871, #136a8a);
-    box-shadow:0px 2px 10px rgba(0,0,0,0.2), 0px 10px 20px rgba(0,0,0,0.3), 0px 30px 60px 1px rgba(0,0,0,0.5);
+    background: linear-gradient(to right, #267871, #136a8a);
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2),
+      0px 10px 20px rgba(0, 0, 0, 0.3), 0px 30px 60px 1px rgba(0, 0, 0, 0.5);
   }
- 
+
   .login-title {
     text-align: center;
     margin-top: 2vh;
     margin-right: 10vw;
     color: skyblue;
-    font-family: 'Satisfy', cursive;
+    font-family: "Satisfy", cursive;
     height: 8vh;
     line-height: 8vh;
     padding-left: 5vw;
@@ -181,17 +181,17 @@ cursor: pointer;
     align-items: center;
   }
 
-  .bg-color{
+  .bg-color {
     /* background-color: #ABCDEF; */
     background-color: white;
     height: 100dvh;
   }
 
-  .login-h3{
+  .login-h3 {
     color: white;
     text-align: center;
   }
-  .login-input-container{
+  .login-input-container {
     width: 100%;
     height: 9dvh;
     display: flex;
@@ -200,12 +200,12 @@ cursor: pointer;
     margin-top: 2dvh;
     color: white;
   }
-  .login-password-container{
+  .login-password-container {
     width: 74%;
     height: fit-content;
-    border:1px solid white;
+    border: 1px solid white;
     border-top: none;
-    border-left:none ;
+    border-left: none;
     border-right: none;
     border-bottom: 1px solid white;
     display: flex;
@@ -214,56 +214,56 @@ cursor: pointer;
     margin-top: 2dvh;
     color: white;
   }
-  .input-password{
+  .input-password {
     border: none;
-    font-size: .9rem;
+    font-size: 0.9rem;
     height: 5dvh;
-    width: 60dvw;
+    width: 58dvw;
     color: white;
     background: transparent;
     outline: none;
   }
-  .input-password::placeholder{
+  .input-password::placeholder {
     font-size: larger;
-    color:white;
+    color: white;
   }
-  .login-input{
-    font-size: .9rem;
+  .login-input {
+    font-size: 0.9rem;
     height: 5dvh;
-    width: 60dvw;
+    width: 64dvw;
     border-top: none;
-    border-left:none ;
+    border-left: none;
     border-right: none;
     color: white;
     border-bottom: 1px solid white;
     background: transparent;
     outline: none;
   }
-  .login-input::placeholder{
+  .login-input::placeholder {
     font-size: larger;
-   color:white;
+    color: white;
   }
-  .login-btn{
-  background: none;
-  width: 25dvw;
-  height:7dvh;
-  border:2px solid white ;
-  color: white;
-  font-weight: bold;
-  font-size: large;
-  border-radius: 10px;
-  cursor: pointer;
+  .login-btn {
+    background: none;
+    width: 25dvw;
+    height: 7dvh;
+    border: 2px solid white;
+    color: white;
+    font-weight: bold;
+    font-size: large;
+    border-radius: 10px;
+    cursor: pointer;
   }
-  
-  .login-btn:hover{
+
+  .login-btn:hover {
     background: white;
     color: #267871;
   }
-  .forgot-password{
-   text-decoration: none;
-   color: white;
+  .forgot-password {
+    text-decoration: none;
+    color: white;
   }
-  .or{
+  .or {
     color: white;
     width: 28px;
     height: 28px;
@@ -274,19 +274,19 @@ cursor: pointer;
     justify-content: center;
     align-items: center;
   }
-  
-  .or::before{
-    content: " " ;
+
+  .or::before {
+    content: " ";
     display: block;
     position: absolute;
     margin-right: 37vw;
     height: 1px;
     width: 27vw;
-   background: white;
+    background: white;
   }
-  
-  .or::after{
-    content: " " ;
+
+  .or::after {
+    content: " ";
     display: block;
     position: absolute;
     margin-left: 37vw;
@@ -294,19 +294,18 @@ cursor: pointer;
     width: 27vw;
     background: white;
   }
-  
-  .login-btn-container{
-    margin-top:5vh ;
+
+  .login-btn-container {
+    margin-top: 5vh;
     width: 78%;
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
-  .click-here{
+  .click-here {
     font-weight: bold;
-    color: #ABCDEF;
+    color: #abcdef;
     text-decoration: none;
-    margin-left: .4rem;
+    margin-left: 0.4rem;
   }
-  
 }
