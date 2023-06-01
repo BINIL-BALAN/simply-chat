@@ -7,20 +7,18 @@ import { doc, setDoc } from "firebase/firestore";
 import { useNavigate, Link } from "react-router-dom";
 
 function Register() {
-  const [file,setFile] = useState(null)
-  const [status,setStatus] = useState(false)
-  const [showPassword,setShowPassword] = useState(true)
+  const [file, setFile] = useState(null);
+  const [status, setStatus] = useState(false);
+  const [showPassword, setShowPassword] = useState(true);
   const [err, setErr] = useState(false);
-  const [numberCheck,setNumberCheck] = useState(false)
-  const [passwordCheck,setPasswordCheck] = useState(false)
-  const [passwordCheckMsg,setPasswordCheckMsg] = useState("")
+  const [numberCheck, setNumberCheck] = useState(false);
+  const [passwordCheck, setPasswordCheck] = useState(false);
+  const [passwordCheckMsg, setPasswordCheckMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [avatar, setAvatar] = useState("images/avatar.png");
   // const selectedImg = useRef();
-  useEffect(() => {
-   
-  }, []);
+  useEffect(() => {}, []);
 
   function handleSelect(e) {
     e.preventDefault();
@@ -29,42 +27,44 @@ function Register() {
 
   function insertImage(e) {
     const imgSelected = e.target.files[0];
-    setFile(imgSelected)
+    setFile(imgSelected);
     // console.log(imgSelected);
     const imgurl = URL.createObjectURL(imgSelected);
     setAvatar(imgurl);
   }
-function handleCheckNumber(e){
-  if(e.target.value.length !== 10){
-     setNumberCheck(true)
-  }else{
-     setNumberCheck(false)
+  function handleCheckNumber(e) {
+    if (e.target.value.length !== 10) {
+      setNumberCheck(true);
+    } else {
+      setNumberCheck(false);
+    }
   }
-}
 
-function handleCheckPassword(e){
-  const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{7,}$/;
-  if(regex.test(e.target.value)){
-    setPasswordCheck(true)
-    setPasswordCheckMsg("Strong password")
-  }else{
-    setPasswordCheck(false)
-    setPasswordCheckMsg("Password must have 7 characters,One or more special character,Uppercase letters,Lowercase letters,one or more digits")
+  function handleCheckPassword(e) {
+    const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{7,}$/;
+    if (regex.test(e.target.value)) {
+      setPasswordCheck(true);
+      setPasswordCheckMsg("Strong password");
+    } else {
+      setPasswordCheck(false);
+      setPasswordCheckMsg(
+        "Password must have 7 characters,One or more special characters,Uppercase letters,Lowercase letters,one or more digits"
+      );
+    }
   }
-}
   async function handleSubmit(e) {
-    setLoading(true)
+    setLoading(true);
     e.preventDefault();
     const displayName = e.target[0].value;
     const email = e.target[1].value;
     const phone = e.target[2].value;
     const password = e.target[3].value;
     // const file = e.target[4].files[0];
-console.log(displayName)
-console.log(email)
-console.log(phone)
-console.log(password)
-console.log(file)
+    console.log(displayName);
+    console.log(email);
+    console.log(phone);
+    console.log(password);
+    console.log(file);
 
     // firebase authentication
     try {
@@ -78,7 +78,7 @@ console.log(file)
       await uploadBytesResumable(storageRef, file).then(() => {
         getDownloadURL(storageRef).then(async (downloadURL) => {
           try {
-            console.log('downloadURL',downloadURL);
+            console.log("downloadURL", downloadURL);
             //Update profile
             await updateProfile(res.user, {
               displayName,
@@ -95,13 +95,13 @@ console.log(file)
 
             //create empty user chats on firestore
             await setDoc(doc(db, "userChats", res.user.uid), {});
-            setStatus(true)
-            setErr(false)
-            setTimeout(()=>{
+            setStatus(true);
+            setErr(false);
+            setTimeout(() => {
               navigate("/");
-            },2000)
+            }, 2000);
           } catch (err) {
-            setStatus(true)
+            setStatus(true);
             console.log(err);
             setErr(true);
             setLoading(false);
@@ -109,7 +109,7 @@ console.log(file)
         });
       });
     } catch (err) {
-      setStatus(true)
+      setStatus(true);
       setErr(true);
       setLoading(false);
     }
@@ -120,7 +120,19 @@ console.log(file)
         <div className="register-title">
           Simply Chat <i className="fa-regular fa-comment"></i>
         </div>
-        {status ?( <div className={err ? "text-danger m-2 text-center" : "text-success m-2 text-center"}>{err ? "Registration failed" : "Registration successfull"}</div>) : ""}
+        {status ? (
+          <div
+            className={
+              err
+                ? "text-danger m-2 text-center"
+                : "text-success m-2 text-center"
+            }
+          >
+            {err ? "Registration failed" : "Registration successfull"}
+          </div>
+        ) : (
+          ""
+        )}
         <section className="register-container">
           <div className="register">
             <h2 className="register-h3">Sign up</h2>
@@ -150,7 +162,11 @@ console.log(file)
                   required
                 />
               </div>
-              {numberCheck && <div className="text-danger">Phone number less than 10 digits</div>}
+              {numberCheck && (
+                <div className="text-danger">
+                  Phone number less than 10 digits
+                </div>
+              )}
               <div className="login-password-container">
                 <input
                   type={showPassword ? "password" : "text"}
@@ -159,9 +175,25 @@ console.log(file)
                   placeholder="Password"
                   required
                 />
-                <button type="button" className="show-btn" onClick={()=>setShowPassword(!showPassword)}>{showPassword ? <i className="fa-regular fa-eye-slash"></i> : <i className="fa-regular fa-eye"></i>}</button>
+                <button
+                  type="button"
+                  className="show-btn"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? (
+                     <i className="fa-regular fa-eye"></i>
+                  ) : (
+                    <i className="fa-regular fa-eye-slash"></i>
+                  )}
+                </button>
               </div>
-              {passwordCheck ? <p className="text-info">{passwordCheckMsg}</p> : <p className="text-warning px-4 text-justify">{passwordCheckMsg}</p>}
+              {passwordCheck ? (
+                <p className="text-info">{passwordCheckMsg}</p>
+              ) : (
+                <p className="text-warning px-4 text-justify">
+                  {passwordCheckMsg}
+                </p>
+              )}
               <div className="register-btn-container2">
                 <img
                   className="register-avatar"
@@ -186,7 +218,11 @@ console.log(file)
               </div>
               <div className="register-btn-container">
                 <button type="submit" className="register-btn">
-                  {loading? (<div className="spinner-border"></div>) : "Register"}
+                  {loading ? (
+                    <div className="spinner-border"></div>
+                  ) : (
+                    "Register"
+                  )}
                 </button>
               </div>
             </form>

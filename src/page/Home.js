@@ -174,6 +174,7 @@ function Home() {
                 )}
               </div>
               <div className="profiles">
+                <h5 className="text-secondary ms-2">Chats</h5>
                 {Object.entries(chats)?.map((user) => (
                   <div
                     key={user[0]}
@@ -184,15 +185,19 @@ function Home() {
                 ))}
               </div>
               <div className="small-menu">
-                <a className="fixed-btn-a success">
+                {/* <a className="fixed-btn-a success">
                   {" "}
                   <i className="fa-solid fa-user-plus"></i>{" "}
-                </a>
-                <a href="#top" className="fixed-btn-a primary">
+                </a> */}
+                <a href="#top" className="fixed-btn-a success">
                   {" "}
                   <i className="fa-solid fa-arrow-up"></i>{" "}
                 </a>
-                <a className="fixed-btn-a danger" onClick={() => signOut(auth)}>
+                <a className="fixed-btn-a danger" 
+                data-bs-toggle="modal" 
+                data-bs-target="#logout-modal"
+                
+                >
                   <i className="fa-solid fa-right-from-bracket"></i>
                 </a>
               </div>
@@ -202,6 +207,25 @@ function Home() {
           <Chat setToggle={setToggle} signout={signOut} auth={auth} />
         )}
       </div>
+
+      {/* <!-- Modal --> */}
+<div className="modal" id="logout-modal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div className="modal-dialog modal-dialog-centered">
+    <div className="modal-content">
+      <div className="modal-header border-0">
+        <h1 className="modal-title fs-5 text-danger" id="exampleModalLabel">Logout  <i className="fa-solid fa-right-from-bracket"></i></h1>
+        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div className="modal-body">
+       Are you sure want to quit 
+      </div>
+      <div className="modal-footer border-0">
+        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">No</button>
+        <button type="button" onClick={() => signOut(auth)} data-bs-dismiss="modal" className="btn btn-danger">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
     </>
   );
 }

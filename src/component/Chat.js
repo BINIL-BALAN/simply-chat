@@ -229,7 +229,6 @@ function updateMessage(message){
       </section>
 
       <div
-        
         className="modal fade show"
         id="select-image"
         data-bs-backdrop="static"
