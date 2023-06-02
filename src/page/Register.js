@@ -7,37 +7,59 @@ import { doc, setDoc } from "firebase/firestore";
 import { useNavigate, Link } from "react-router-dom";
 
 function Register() {
-  const [status,setStatus] = useState(false)
+  const [file, setFile] = useState();
+  const [showPassword, setShowPassword] = useState(true);
+  const [checkPhone, setCheckPhone] = useState(false);
+  const [checkPassword, setCheckPassword] = useState({
+    status: false,
+    msg: "",
+  });
+  const [status, setStatus] = useState(false);
   const [err, setErr] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const [avatar, setAvatar] = useState("images/avatar.png");
+  const [avatar, setAvatar] = useState("images/dp.png");
   const selectedImg = useRef();
-  useEffect(() => {
-   
-  }, []);
+  useEffect(() => {}, []);
 
   function handleSelect(e) {
     e.preventDefault();
     document.getElementById("image").click();
   }
 
+  function handleCheckPassword(e) {
+    const pattern = /^(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{7,}$/;
+    if (pattern.test(e.target.value)) {
+      setCheckPassword({
+        status: true,
+        msg: "Strong password",
+      });
+    } else {
+      setCheckPassword({
+        status: false,
+        msg: "Password must have at least 7 characters, one or more special characters, uppercase letters, lowercase letters, and one or more numbers.",
+      });
+    }
+  }
+
   function insertImage(e) {
     const imgSelected = e.target.files[0];
-    console.log(imgSelected);
+    setFile(imgSelected);
+    // console.log(imgSelected);
     const imgurl = URL.createObjectURL(imgSelected);
     setAvatar(imgurl);
   }
 
   async function handleSubmit(e) {
-    setLoading(true)
+    setLoading(true);
     e.preventDefault();
     const displayName = e.target[0].value;
     const email = e.target[1].value;
-    const password = e.target[2].value;
-    const file = e.target[3].files[0];
+    const phone = e.target[2].value;
+    const password = e.target[3].value;
+    // const file = e.target[4].files[0];
 
-    //firebase authentication
+    // firebase authentication
     try {
       //Create user
       const res = await createUserWithEmailAndPassword(auth, email, password);
@@ -49,7 +71,7 @@ function Register() {
       await uploadBytesResumable(storageRef, file).then(() => {
         getDownloadURL(storageRef).then(async (downloadURL) => {
           try {
-            console.log('downloadURL',downloadURL);
+            console.log("downloadURL", downloadURL);
             //Update profile
             await updateProfile(res.user, {
               displayName,
@@ -60,18 +82,19 @@ function Register() {
               uid: res.user.uid,
               displayName,
               email,
+              phone,
               photoURL: downloadURL,
             });
 
             //create empty user chats on firestore
             await setDoc(doc(db, "userChats", res.user.uid), {});
-            setStatus(true)
-            setErr(false)
-            setTimeout(()=>{
+            setStatus(true);
+            setErr(false);
+            setTimeout(() => {
               navigate("/");
-            },2000)
+            }, 2000);
           } catch (err) {
-            setStatus(true)
+            setStatus(true);
             console.log(err);
             setErr(true);
             setLoading(false);
@@ -79,7 +102,7 @@ function Register() {
         });
       });
     } catch (err) {
-      setStatus(true)
+      setStatus(true);
       setErr(true);
       setLoading(false);
     }
@@ -90,7 +113,19 @@ function Register() {
         <div className="register-title">
           Simply Chat <i className="fa-regular fa-comment"></i>
         </div>
-        {status ?( <div className={err ? "text-danger m-2 text-center" : "text-success m-2 text-center"}>{err ? "Registration failed" : "Registration successfull"}</div>) : ""}
+        {status ? (
+          <div
+            className={
+              err
+                ? "text-danger m-2 text-center"
+                : "text-success m-2 text-center"
+            }
+          >
+            {err ? "Registration failed" : "Registration successfull"}
+          </div>
+        ) : (
+          ""
+        )}
         <section className="register-container">
           <div className="register">
             <h2 className="register-h3">Sign up</h2>
@@ -100,6 +135,7 @@ function Register() {
                   type="text"
                   className="login-input"
                   placeholder="Username"
+                  required
                 />
               </div>
               <div className="login-input-container">
@@ -107,15 +143,57 @@ function Register() {
                   type="email"
                   className="login-input"
                   placeholder="Email"
+                  required
                 />
               </div>
               <div className="login-input-container">
                 <input
-                  type="password"
+                  type="tel"
                   className="login-input"
-                  placeholder="Password"
+                  onChange={(e) =>
+                    e.target.value.length !== 10
+                      ? setCheckPhone(true)
+                      : setCheckPhone(false)
+                  }
+                  placeholder="Phone number"
+                  required
                 />
               </div>
+              {checkPhone && (
+                <div className="text-danger text-center">
+                  Invalid phone number
+                </div>
+              )}
+              <div className="login-password-container">
+                <input
+                  type="password"
+                  className="input-password"
+                  onChange={handleCheckPassword}
+                  placeholder="Password"
+                  required
+                />
+                <button
+                  type="button"
+                  className="show-btn"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? (
+                    <i className="fa-regular fa-eye"></i>
+                  ) : (
+                    <i className="fa-regular fa-eye-slash"></i>
+                  )}
+                </button>
+              </div>
+
+              {checkPassword.status ? (
+                <p className="text-center text-success bg-light px-3 mt-3">
+                  {checkPassword.msg}
+                </p>
+              ) : (
+                <p className="text-danger bg-light px-3 mx-2 mt-3">
+                  {checkPassword.msg}
+                </p>
+              )}
               <div className="register-btn-container2">
                 <img
                   className="register-avatar"
@@ -140,7 +218,11 @@ function Register() {
               </div>
               <div className="register-btn-container">
                 <button type="submit" className="register-btn">
-                  {loading? (<div className="spinner-border"></div>) : "Register"}
+                  {loading ? (
+                    <div className="spinner-border"></div>
+                  ) : (
+                    "Register"
+                  )}
                 </button>
               </div>
             </form>
@@ -148,9 +230,9 @@ function Register() {
 
             <div className="login-input-container">
               Already have an account ?{" "}
-              <a href="/" className="click-here">
+              <Link to="/" className="click-here">
                 Login
-              </a>
+              </Link>
             </div>
           </div>
         </section>

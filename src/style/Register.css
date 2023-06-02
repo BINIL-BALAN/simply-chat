@@ -37,7 +37,8 @@
   }
 
 .register-btn-container{
-    margin-top: 3vh;
+    margin-top: 4vh;
+    width: 73%;
     display: flex;
     justify-content: center;
 }
@@ -67,12 +68,20 @@
 
 .register-container {
     width: 100%;
-    height: 83vh;
+    /* height: 83vh; */
+    padding-top: 10px;
+    height: fit-content;
+    margin-top: 2vh;
     display: flex;
     justify-content: center;
     align-items: center;
   }
-
+.show-btn{
+  background:none;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+}
   @media (max-width:625px){
     .register {
       border-radius: 10px;

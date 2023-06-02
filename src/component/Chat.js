@@ -19,6 +19,7 @@ function Chat({ setToggle, signout, auth }) {
   // const [text, setText] = useState();
   const [img, setImg] = useState();
   const [dpError, setDpError] = useState(true);
+  const [chatLoading,setChatLoading] = useState(false)
   const [themeColor, setThemeColor] = useState(
     window.localStorage.getItem("theme") || "white"
   );
@@ -33,6 +34,7 @@ function Chat({ setToggle, signout, auth }) {
 
   async function handleSend(e) {
     e.preventDefault();
+    setChatLoading(true)
     const chatMsg = msg.current.value;
     msg.current.value = "";
     // setText(msg.current.value);
@@ -58,6 +60,7 @@ function Chat({ setToggle, signout, auth }) {
               }),
             });
           } catch (error) {
+            setChatLoading(false)
             // Handle object-not-found error
             console.log("Object does not exist:", error);
           }
@@ -116,6 +119,7 @@ function updateMessage(message){
   useEffect(() => { 
     const unSub = onSnapshot(doc(db, "chats", data?.chatId), (doc) => {
       doc.exists() && updateMessage(doc.data()?.messages)
+      setChatLoading(false)
     });
          chatArea.current.scrollTop = chatArea.current.scrollHeight; 
     return () => {
@@ -218,14 +222,13 @@ function updateMessage(message){
               <i className="fa-solid fa-paperclip"></i>
             </button>
             <button className="primary send-btn" type="submit">
-              <i className="fa-solid fa-paper-plane"></i>
+            {chatLoading ? <div className="spinner spinner-border"></div> : <i className="fa-solid fa-paper-plane"></i>}
             </button>
           </form>
         </div>
       </section>
 
       <div
-        
         className="modal fade show"
         id="select-image"
         data-bs-backdrop="static"
@@ -279,7 +282,7 @@ function updateMessage(message){
                 className="primary send-btn"
                 type="button"
               >
-                <i className="fa-solid fa-paper-plane"></i>
+                {chatLoading ? <div className="spinner spinner-border"></div> : <i className="fa-solid fa-paper-plane"></i>}
               </button>
             </div>
           </div>

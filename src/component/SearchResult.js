@@ -1,7 +1,7 @@
 import React,{useState} from 'react'
 import '../style/User.css'
 function SearchResult({user}) {
-    console.log(user);
+    // console.log(user);
     const [dpError, setDpError] = useState(true);
   return (
     <>
